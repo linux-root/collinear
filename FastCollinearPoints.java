@@ -10,11 +10,12 @@ public class FastCollinearPoints {
     private final LineSegment[] lineSegments;
     private final int numberOfLineSeqment;
 
-    public FastCollinearPoints(Point[] points) {
+    public FastCollinearPoints(final Point[] points) {
         if (points == null) {
             throw new IllegalArgumentException("points list must not be null");
         }
-        lineSegments = new LineSegment[points.length * 10];
+        final int m = 10;
+        this.lineSegments = new LineSegment[points.length * m];
         int c = 0;
         for (int i = 0; i < points.length; i++) {
             Point head = points[i];
@@ -30,7 +31,7 @@ public class FastCollinearPoints {
             for (int j = 1; j < tail.length; j++) {
                 if (head.slopeOrder().compare(current, tail[j]) != 0) {
                     if (equality >= 2) {
-                        lineSegments[c++] = new LineSegment(head, tail[j - 1]);
+                        this.lineSegments[c++] = new LineSegment(head, tail[j - 1]);
                     }
                     current = tail[j];
                     equality = 0;
@@ -40,7 +41,7 @@ public class FastCollinearPoints {
                 }
             }
             if (equality >= 2) {
-                lineSegments[c++] = new LineSegment(head, tail[tail.length - 1]);
+                this.lineSegments[c++] = new LineSegment(head, tail[tail.length - 1]);
             }
         }
         this.numberOfLineSeqment = c;
@@ -60,11 +61,11 @@ public class FastCollinearPoints {
 
     public LineSegment[] segments() {
         // the line segments
-        final LineSegment[] segments = new LineSegment[numberOfLineSeqment];
-        int i = 0;
-        for (LineSegment segment : this.lineSegments) {
-          segments[i++] = segment;
+        final LineSegment[] segments = new LineSegment[this.numberOfLineSeqment];
+        for (int i = 0; i < this.numberOfLineSeqment; i++) {
+            segments[i] = this.lineSegments[i];
         }
+
         return segments;
     }
 }

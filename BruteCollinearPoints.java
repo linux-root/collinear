@@ -2,53 +2,52 @@ import java.util.Arrays;
 
 public class BruteCollinearPoints {
 
-    private int numberOfLineSeqment;
-    private LineSegment[] lineSegments;
+    private final int numberOfLineSeqment;
+    private final LineSegment[] lineSegments;
 
-    public BruteCollinearPoints(Point[] points) {
+    public BruteCollinearPoints(final Point[] points) {
         if (points == null) {
             throw new IllegalArgumentException("points list must not be null");
         }
-        lineSegments = new LineSegment[points.length * 10];
+        for (Point point : points) {
+            if (point == null) throw new IllegalArgumentException("Point is null ");
+        }
+        final int pad = 10;
+        lineSegments = new LineSegment[points.length * pad];
         int c = 0;
-        Arrays.sort(points);
-        try {
-            for (int i = 0; i < points.length; i++) {
-                for (int j = i + 1; j < points.length; j++) {
-                    if (points[i].equals(points[j])) {
+        final Point[] sortedPoints = Arrays.stream(points).sorted().toArray(Point[]::new);
+        for (int i = 0; i < sortedPoints.length; i++) {
+            for (int j = i + 1; j < sortedPoints.length; j++) {
+                if (sortedPoints[i].equals(sortedPoints[j])) {
+                    throw new IllegalArgumentException(
+                            "duplicated Point: " + sortedPoints[i].toString() + " and " + sortedPoints[j]
+                                    .toString());
+                }
+                for (int k = j + 1; k < sortedPoints.length; k++) {
+                    if (sortedPoints[k].equals(sortedPoints[j])) {
                         throw new IllegalArgumentException(
-                                "duplicated Point: " + points[i].toString() + " and " + points[j]
-                                        .toString());
+                                "duplicated Point: " + sortedPoints[k].toString() + " and "
+                                        + sortedPoints[j].toString());
                     }
-                    for (int k = j + 1; k < points.length; k++) {
-                        if (points[k].equals(points[j])) {
+                    if (sortedPoints[i].slopeOrder().compare(sortedPoints[j], sortedPoints[k]) != 0) {
+                        continue;
+                    }
+                    Point endingPointOfLineSegment = null;
+                    for (int n = k + 1; n < sortedPoints.length; n++) {
+                        if (sortedPoints[n].equals(sortedPoints[k])) {
                             throw new IllegalArgumentException(
-                                    "duplicated Point: " + points[k].toString() + " and "
-                                            + points[j].toString());
+                                    "duplicated Point: " + sortedPoints[n].toString() + " and "
+                                            + sortedPoints[k].toString());
                         }
-                        if (points[i].slopeOrder().compare(points[j], points[k]) != 0) {
-                            continue;
+                        if (sortedPoints[j].slopeOrder().compare(sortedPoints[k], sortedPoints[n]) == 0) {
+                            endingPointOfLineSegment = sortedPoints[n];
                         }
-                        Point endingPointOfLineSegment = null;
-                        for (int n = k + 1; n < points.length; n++) {
-                            if (points[n].equals(points[k])) {
-                                throw new IllegalArgumentException(
-                                        "duplicated Point: " + points[n].toString() + " and "
-                                                + points[k].toString());
-                            }
-                            if (points[j].slopeOrder().compare(points[k], points[n]) == 0) {
-                                endingPointOfLineSegment = points[n];
-                            }
-                        }
-                        if (endingPointOfLineSegment != null) {
-                            lineSegments[c++] = new LineSegment(points[i], endingPointOfLineSegment);
-                        }
+                    }
+                    if (endingPointOfLineSegment != null) {
+                        lineSegments[c++] = new LineSegment(sortedPoints[i], endingPointOfLineSegment);
                     }
                 }
             }
-        }
-        catch (NullPointerException e) {
-            throw new IllegalArgumentException("Point must not be Null");
         }
         this.numberOfLineSeqment = c;
     }
@@ -63,7 +62,7 @@ public class BruteCollinearPoints {
         // the line segments
         final LineSegment[] segments = new LineSegment[numberOfLineSeqment];
         for (int i = 0; i < numberOfLineSeqment; i++) {
-           segments[i] = this.lineSegments[i];
+            segments[i] = this.lineSegments[i];
         }
         return segments;
     }
