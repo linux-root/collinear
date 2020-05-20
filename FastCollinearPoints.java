@@ -39,6 +39,9 @@ public class FastCollinearPoints {
                     equality++;
                 }
             }
+            if (equality >= 2) {
+                temp[c++] = new LineSegment(head, tail[tail.length - 1]);
+            }
         }
         this.numberOfLineSeqment = c;
         this.segments = new LineSegment[c];

@@ -98,21 +98,19 @@ public class Point implements Comparable<Point> {
      *
      * @return the Comparator that defines this ordering on points
      */
+
     public Comparator<Point> slopeOrder() {
         /* YOUR CODE HERE */
-       return new Comparator<Point>() {
-           @Override
-           public int compare(Point p1, Point p2) {
-               final double delta =  Point.this.slopeTo(p1) - Point.this.slopeTo(p2);
-               if (delta < 0) {
-                   return -1;
-               }
-               if (delta > 0) {
-                   return 1;
-               }
-
-               return 0;
+       return (p1, p2) -> {
+           final double delta =  Point.this.slopeTo(p1) - Point.this.slopeTo(p2);
+           if (delta < 0) {
+               return -1;
            }
+           if (delta > 0) {
+               return 1;
+           }
+
+           return 0;
        };
     }
 
