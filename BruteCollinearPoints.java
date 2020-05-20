@@ -2,14 +2,14 @@ import java.util.Arrays;
 
 public class BruteCollinearPoints {
 
-    private LineSegment[] segments;
     private int numberOfLineSeqment;
+    private LineSegment[] lineSegments;
 
     public BruteCollinearPoints(Point[] points) {
         if (points == null) {
             throw new IllegalArgumentException("points list must not be null");
         }
-        LineSegment[] temp = new LineSegment[points.length * 10];
+        lineSegments = new LineSegment[points.length * 10];
         int c = 0;
         Arrays.sort(points);
         try {
@@ -41,7 +41,7 @@ public class BruteCollinearPoints {
                             }
                         }
                         if (endingPointOfLineSegment != null) {
-                            temp[c++] = new LineSegment(points[i], endingPointOfLineSegment);
+                            lineSegments[c++] = new LineSegment(points[i], endingPointOfLineSegment);
                         }
                     }
                 }
@@ -51,10 +51,6 @@ public class BruteCollinearPoints {
             throw new IllegalArgumentException("Point must not be Null");
         }
         this.numberOfLineSeqment = c;
-        this.segments = new LineSegment[c];
-        for (int i = 0; i < c; i++) {
-            this.segments[i] = temp[i];
-        }
     }
 
     // finds all line segments containing 4 points
@@ -65,6 +61,10 @@ public class BruteCollinearPoints {
 
     public LineSegment[] segments() {
         // the line segments
-        return this.segments;
+        final LineSegment[] segments = new LineSegment[numberOfLineSeqment];
+        for (int i = 0; i < numberOfLineSeqment; i++) {
+           segments[i] = this.lineSegments[i];
+        }
+        return segments;
     }
 }
