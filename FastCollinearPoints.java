@@ -7,14 +7,14 @@
 import java.util.Arrays;
 
 public class FastCollinearPoints {
-    private LineSegment[] segments;
-    private int numberOfLineSeqment;
+    private final LineSegment[] lineSegments;
+    private final int numberOfLineSeqment;
 
     public FastCollinearPoints(Point[] points) {
         if (points == null) {
             throw new IllegalArgumentException("points list must not be null");
         }
-        LineSegment[] temp = new LineSegment[points.length * 10];
+        lineSegments = new LineSegment[points.length * 10];
         int c = 0;
         for (int i = 0; i < points.length; i++) {
             Point head = points[i];
@@ -30,7 +30,7 @@ public class FastCollinearPoints {
             for (int j = 1; j < tail.length; j++) {
                 if (head.slopeOrder().compare(current, tail[j]) != 0) {
                     if (equality >= 2) {
-                        temp[c++] = new LineSegment(head, tail[j - 1]);
+                        lineSegments[c++] = new LineSegment(head, tail[j - 1]);
                     }
                     current = tail[j];
                     equality = 0;
@@ -40,14 +40,10 @@ public class FastCollinearPoints {
                 }
             }
             if (equality >= 2) {
-                temp[c++] = new LineSegment(head, tail[tail.length - 1]);
+                lineSegments[c++] = new LineSegment(head, tail[tail.length - 1]);
             }
         }
         this.numberOfLineSeqment = c;
-        this.segments = new LineSegment[c];
-        for (int i = 0; i < c; i++) {
-            this.segments[i] = temp[i];
-        }
     }
 
     private Point[] tail(Point[] source) {
@@ -64,6 +60,11 @@ public class FastCollinearPoints {
 
     public LineSegment[] segments() {
         // the line segments
-        return this.segments;
+        final LineSegment[] segments = new LineSegment[numberOfLineSeqment];
+        int i = 0;
+        for (LineSegment segment : this.lineSegments) {
+          segments[i++] = segment;
+        }
+        return segments;
     }
 }
