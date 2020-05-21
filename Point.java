@@ -105,7 +105,7 @@ public class Point implements Comparable<Point> {
     public Comparator<Point> slopeOrder() {
         /* YOUR CODE HERE */
        return (p1, p2) -> {
-           final double delta =  Point.this.slopeTo(p1) - Point.this.slopeTo(p2);
+           final double delta =  this.slopeTo(p1) - this.slopeTo(p2);
            if (delta < 0) {
                return -1;
            }
